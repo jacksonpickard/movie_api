@@ -5,13 +5,83 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>Jackson's Movie api</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <style>
+    table, th, td {
+      border: 1px solid
+    }
+  </style>
 </head>
-
 <body>
-<p>This movie api is practice for server-side programming. The api will provide users with access to information about different
-    movies, directors, and genres. Users will be able to sign up, update their
-    personal information, and create a list of their favorite movies.</p>
+  <h1>Documentation Page for Jackson's movie API</h1>
+  <h5>INSTRUCTIONS</h5> 
+    <p>This app contains info on movies!</p>
+    <p>Here you'll find information on movies, directors, genres</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Request</th>
+        <th>URL</th>
+        <th>HTTP</th>
+        <th>Response</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>Return a list of ALL movies to the user</th>
+        <th>/movies</th>
+        <th>GET</th>
+        <th>json object of all movies</th>
+      </tr>
+      <tr>
+        <th>Return data (description, genre, director, image URL, whether its featured or not) about a single movie by title to the user</th>
+        <th>/movies/title</th>
+        <th>GET</th>
+        <th>json object of the selected movie</th>
+      </tr>
+      <tr>
+        <th>Return data about a genre (description) by name/title (e.g., “Thriller”)</th>
+        <th>/movies/genreName</th>
+        <th>GET</th>
+        <th>json object of genre</th>
+      </tr>
+      <tr>
+        <th>Return data about a director (bio, birth year, death year) by name</th>
+        <th>/movies/directorName</th>
+        <th>GET</th>
+        <th>json object of director</th>
+      </tr>
+      <tr>
+        <th>Allow new users to register</th>
+        <th>/users</th>
+        <th>POST</th>
+        <th>message reporting successful registration</th>
+      </tr>
+      <tr>
+        <th>Allow users to update their user info (username)</th>
+        <th>/users/username</th>
+        <th>POST</th>
+        <th>message saying info was updated</th>
+      </tr>
+      <tr>
+        <th>Allow users to add a movie to their list of favorites</th>
+        <th>/users/username/movies/MovieID</th>
+        <th>POST</th>
+        <th>message saying movie was added to favorites</th>
+      </tr>
+      <tr>
+        <th>Allow users to remove a movie from their list of favorites</th>
+        <th>/users/username/movies/MovieID</th>
+        <th>DELETE</th>
+        <th>message confirming deletion of movie from favorites</th>
+      </tr>
+      <tr>
+        <th>Allow existing users to deregister</th>
+        <th>/users/username</th>
+        <th>DELETE</th>
+        <th>message confirming deregistration</th>
+      </tr>
+    </tbody>
+  </table>
 </body>
 
 </html>
