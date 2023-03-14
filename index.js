@@ -188,42 +188,54 @@ let topMovies = [
     },
 ];
 
-//get request to get a list of data about all movies
-app.get('/movies', (req, res) => {
-    Movies.find()
-        .then((Movies) => {
-            res.status(201).json(Movies);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send("Error: " + err);
-        });
-});
-
 app.get('/', (req, res) => {
     res.send('This is my practice for backend development');
 });
 
+//get request to get a list of data about all movies
+app.get('/movies', (req, res) => {
+    res.send('Succesful GET request returning data for all movies')
+});
+
+//get request to get info on movie using title
+app.get('/movies/:title', (req, res) => {
+    res.send('Succesful GET request returning data for selected movie')
+});
+
+//get request to get genre of a movie
+app.get('/movies/genre/:genreName', (req, res) => {
+    res.send('Succesful GET request returning genre')
+});
+
 //gets data about director
-app.get('/movies/:director', (req, res) => {
-    res.json(topMovies.find( (topMovies) =>
-        {return topMovies.director === req.params.director }));
+app.get('/movies/director/:directorName', (req, res) => {
+    res.send('Succesful GET request returning director')
 });
 
-//post request that allows movies to be added to top movie array
-app.post('/movies', (req, res) => {
-    let newMovie = req.body;
-
-    if (!newMovie.title) {
-        const message = 'Missing "title" in request body';
-        res.status(400).send(message);
-    } else {
-        newMovie.id = uuid.v4();
-        topMovies.push(newMovie);
-        res.status(201).send(newMovie);
-    }
+//POST for user registration
+app.post('/users', (req, res) => {
+    res.send('Succesful registration')
 });
 
+//POST for updating username 
+app.post('/users/username', (req, res) => {
+    res.send('Information was updated correctly')
+});
+
+//POST for adding a movie to favorites
+app.post('/users/username/movies/MovieID', (req, res) => {
+    res.send('Succesfully added movie to favorites')
+});
+
+//DELETE for removing movie from list of favorites
+app.delete('/users/username/movies/MovieID', (req, res) => {
+    res.send('Succesful removal of favorite movie')
+});
+
+//DELETE for unregistering
+app.delete('/users/username', (req, res) => {
+    res.send('Succesful deregistration')
+});
 
 app.use(express.static('public'));
 
