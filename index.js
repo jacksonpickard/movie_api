@@ -190,7 +190,14 @@ let topMovies = [
 
 //get request to get a list of data about all movies
 app.get('/movies', (req, res) => {
-    res.json(topMovies);
+    Movies.find()
+        .then((Movies) => {
+            res.status(201).json(Movies);
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error: " + err);
+        });
 });
 
 app.get('/', (req, res) => {
