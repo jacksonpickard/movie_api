@@ -9,7 +9,8 @@ const app = express();
 const movies = models.movie;
 const users = models.user;
 
-mongoose.connect('mongodb://localhost:27017/cfDB', {useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://127.0.0.1/cfDB', {useNewUrlParser: true, useUnifiedTopology: true });
+
 
 
 app.use(bodyParser.json());
@@ -35,8 +36,8 @@ app.get('/movies', (req, res) => {
 //get request to get info on movie using title
 app.get('/movies/:title', (req, res) => {
     movies.findOne({title: req.params.title})
-        .then((movie) => {
-            res.json(movie);
+        .then((movies) => {
+            res.json(movies);
         })
         .catch((err) => {
             console.error(err);
@@ -46,9 +47,9 @@ app.get('/movies/:title', (req, res) => {
 
 //get request to get movie names based on genre
 app.get('/movies/genre/:name', (req, res) => {
-    movies.findOne({'genre.name': req.params.name})
-    .then((movie) => {
-        res.json(movie);
+    movies.find({'genre.name': req.params.name})
+    .then((movies) => {
+        res.json(movies);
     })
     .catch((err) => {
         console.error(err);
@@ -119,9 +120,9 @@ app.post('/users', (req, res) => {
         });
 });
 
-//POST for updating username 
-app.put('/users/:Username', (req, res) => {
-    users.findOneAndUpdate({Username: req.params.Username}, {$set:
+//PUT for updating users info using username 
+app.put('/users/:userName', (req, res) => {
+    users.findOneAndUpdate({userName: req.params.userName}, {$set:
         {
             userName: req.body.userName,
             Password: req.body.Password,
@@ -141,7 +142,7 @@ app.put('/users/:Username', (req, res) => {
 });
 
 //POST for adding a movie to favorites
-app.post('/users/userName/movies/:MovieID', (req, res) => {
+app.post('/users/:userName/movies/:MovieID', (req, res) => {
     users.findOneAndUpdate({userName: req.params.userName}, {
         $push: {FavoriteMovies: req.params.MovieID}
     },
