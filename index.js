@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const mongoose = require('mongoose');
 const models = require('./models.js');
+const { reject } = require("lodash");
 const app = express();
 
 const movies = models.movie;
@@ -122,6 +123,7 @@ app.post('/users', (req, res) => {
 
 //PUT for updating users info using username 
 app.put('/users/:userName', (req, res) => {
+    return new Promise((resolve, reject) => {
     users.findOneAndUpdate({userName: req.params.userName}, {$set:
         {
             userName: req.body.userName,
@@ -130,46 +132,46 @@ app.put('/users/:userName', (req, res) => {
             Birthday: req.body.Birthday
         }
     },
-    {new: true}, //This line makes sure the updated document is returned
-    (err, updatedUser) => {
-        if(err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
-    });
+    {new: true}) //This line makes sure the updated document is returned
+  .then(updatedUser => 
+    {resolve(res.json(updatedUser));
+  }, err => {
+    console.error(err);
+    reject(res.status(500).send('Error: ' + err))
+  })
 });
+});
+
 
 //POST for adding a movie to favorites
 app.post('/users/:userName/movies/:MovieID', (req, res) => {
+    return new Promise((resolve, reject) => {
     users.findOneAndUpdate({userName: req.params.userName}, {
         $push: {FavoriteMovies: req.params.MovieID}
     },
-    {new:true},
-    (err, updatedUser) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
+    {new:true})
+    .then(updatedUser =>
+        {resolve(res.json(updatedUser));
+    }, err => {
+        console.error(err);
+        reject(res.status(500).send('Error: ' + err))
+    })
     });
 });
 
-//PUT for updating movie from list of favorites
-app.put('/users/username/movies/MovieID', (req, res) => {
+//Delete for removing movie from list of favorites
+app.delete('/users/:userName/movies/:MovieID', (req, res) => {
+    return new Promise((resolve, reject) => {
     users.findOneAndUpdate({userName: req.params.userName}, {
-    $push: {FavoriteMovies: req.params.MovieID},
+        $pull: {FavoriteMovies: req.params.MovieID}
     },
-    {new: true},
-    (err, updatedUser) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        } else {
-            res.json(updatedUser);
-        }
+    {new:true})
+    .then(updatedUser =>
+        {resolve(res.json(updatedUser));
+    }, err => {
+        console.error(err);
+        reject(res.status(500).send('Error: ' + err))
+    })
     });
 });
 
