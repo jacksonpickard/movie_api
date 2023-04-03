@@ -13,8 +13,12 @@ const users = models.user;
 mongoose.connect('mongodb://127.0.0.1/cfDB', {useNewUrlParser: true, useUnifiedTopology: true });
 
 
+app.use (bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(bodyParser.json());
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
 
 
@@ -23,7 +27,7 @@ app.get('/', (req, res) => {
 });
 
 //get request to get a list of data about all movies
-app.get('/movies', (req, res) => {
+app.get('/movies', passport.authenticate('jwt', { session: false }), (req, res) => {
     movies.find()
         .then((movies) => {
             res.status(201).json(movies);
