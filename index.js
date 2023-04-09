@@ -5,6 +5,7 @@ const uuid = require("uuid");
 const mongoose = require("mongoose");
 const models = require("./models.js");
 const { reject } = require("lodash");
+const { check, validationResult } = require('express-validator');
 const app = express();
 
 const movies = models.movie;
@@ -99,9 +100,9 @@ app.get("/users", (req, res) => {
 });
 
 //gets a user by username
-app.get("/users/:userName", (req, res) => {
+app.get("/users/:Username", (req, res) => {
   users
-    .findOne({ userName: req.params.userName })
+    .findOne({ Username: req.params.Username })
     .then((user) => {
       res.json(user);
     })
@@ -112,17 +113,31 @@ app.get("/users/:userName", (req, res) => {
 });
 
 //POST for user registration
-app.post("/users", (req, res) => {
+app.post("/users", 
+    [
+        check('Username', 'Username is required').isLength({min: 5}),
+        check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
+        check('Password', 'Password is required').not().isEmpty(),
+        check('Email', 'Email does not appear to be valid').isEmail()
+    ], (req, res) => {
+
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() });
+        }
+
+    let hashedPassword = users.hashPassword(req.body.Password);
   users
-    .findOne({ userName: req.body.userName })
+    .findOne({ Username: req.body.Username })
     .then((user) => {
       if (user) {
-        return res.status(400).send(req.body.userName + "already exists.");
+        return res.status(400).send(req.body.Username + "already exists.");
       } else {
         users
           .create({
-            userName: req.body.userName,
-            Password: req.body.Password,
+            Username: req.body.Username,
+            Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday,
           })
@@ -142,14 +157,14 @@ app.post("/users", (req, res) => {
 });
 
 //PUT for updating users info using username
-app.put("/users/:userName", (req, res) => {
+app.put("/users/:Username", (req, res) => {
   return new Promise((resolve, reject) => {
     users
       .findOneAndUpdate(
-        { userName: req.params.userName },
+        { Username: req.params.Username },
         {
           $set: {
-            userName: req.body.userName,
+            Username: req.body.Username,
             Password: req.body.Password,
             Email: req.body.Email,
             Birthday: req.body.Birthday,
@@ -170,11 +185,11 @@ app.put("/users/:userName", (req, res) => {
 });
 
 //POST for adding a movie to favorites
-app.post("/users/:userName/movies/:MovieID", (req, res) => {
+app.post("/users/:Username/movies/:MovieID", (req, res) => {
   return new Promise((resolve, reject) => {
     users
       .findOneAndUpdate(
-        { userName: req.params.userName },
+        { Username: req.params.Username },
         {
           $push: { FavoriteMovies: req.params.MovieID },
         },
@@ -193,11 +208,11 @@ app.post("/users/:userName/movies/:MovieID", (req, res) => {
 });
 
 //Delete for removing movie from list of favorites
-app.delete("/users/:userName/movies/:MovieID", (req, res) => {
+app.delete("/users/:Username/movies/:MovieID", (req, res) => {
   return new Promise((resolve, reject) => {
     users
       .findOneAndUpdate(
-        { userName: req.params.userName },
+        { Username: req.params.Username },
         {
           $pull: { FavoriteMovies: req.params.MovieID },
         },
@@ -216,14 +231,14 @@ app.delete("/users/:userName/movies/:MovieID", (req, res) => {
 });
 
 //DELETE for unregistering
-app.delete("/users/:userName", (req, res) => {
+app.delete("/users/:Username", (req, res) => {
   users
-    .findOneAndRemove({ userName: req.params.userName })
+    .findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
       if (!user) {
-        res.status(400).send(req.params.userName + " was not found");
+        res.status(400).send(req.params.Username + " was not found");
       } else {
-        res.status(200).send(req.params.userName + " was deleted.");
+        res.status(200).send(req.params.Username + " was deleted.");
       }
     })
     .catch((err) => {
@@ -241,4 +256,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something went wrong!");
 });
 
-app.listen(8080, () => console.log("listening on port 8080"));
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0',() => {
+    console.log('Listening on Port ' + port);
+});
