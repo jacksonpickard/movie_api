@@ -11,7 +11,12 @@ const app = express();
 const movies = models.movie;
 const users = models.user;
 
-mongoose.connect("mongodb://127.0.0.1/cfDB", {
+// mongoose.connect("mongodb://127.0.0.1/cfDB", {
+//   useNewUrlParser: true,
+//   useUnifiedTopology: true,
+// });
+
+mongoose.connect("process.env.CONNECTION_URI", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
