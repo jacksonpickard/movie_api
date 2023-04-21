@@ -21,8 +21,9 @@ app.use(cors({
 }));
 
 // import auth file, passport module, and passport file
-const auth = require("./auth.js");
-auth(app);
+const auth = require("./auth.js")(app);
+// app.use(auth);
+
 
 const passport = require("passport");
 require("./passport.js");
