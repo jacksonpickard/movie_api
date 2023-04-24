@@ -45,7 +45,7 @@ const { check, validationResult } = require('express-validator');
 // });
 
 // connects database on Atlas to Heroku API
-mongoose.connect( process.env.CONNECTION_URI, {
+mongoose.connect( "mongodb+srv://myFlixDBadmin:Hannah4225!@myflixdb.mqx7tfr.mongodb.net/myFlixDB?retryWrites=true&w=majority", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
