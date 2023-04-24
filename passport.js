@@ -10,7 +10,7 @@ let Users = Models.User,
 passport.use(new LocalStrategy ({
     usernameField: 'Username',
     passwordField: 'Password'
-}, (username, password, callback) => {
+},  (username, password, callback) => {
         console.log(username + ' / ' + password);
         Users.findOne({ Username: username }, (error, user) => {
             if (error) {
@@ -46,3 +46,6 @@ passport.use(new JWTStrategy ({
             return callback(error)
         });
 }));
+
+
+
