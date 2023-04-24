@@ -39,16 +39,16 @@ const Users = models.User;
 const { check, validationResult } = require('express-validator');
 
 // allows mongoose to connect to database for CRUD operations on docs within REST API
-mongoose.connect("mongodb://127.0.0.1/cfDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// connects database on Atlas to Heroku API
-// mongoose.connect("process.env.CONNECTION_URI", {
+// mongoose.connect("mongodb://127.0.0.1/cfDB", {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
 // });
+
+// connects database on Atlas to Heroku API
+mongoose.connect( process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 //automatically route request to send back response with a file in the /Public root folder. express.static to serve documentaion.html from public folder
 app.use(express.static("public"));
