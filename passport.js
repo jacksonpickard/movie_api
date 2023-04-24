@@ -12,25 +12,27 @@ passport.use(new LocalStrategy ({
     passwordField: 'Password'
 },  (username, password, callback) => {
         console.log(username + ' / ' + password);
-        Users.findOne({ Username: username }, (error, user) => {
+        Users.findOne({ Username: username }).then(user => {
+          console.log(user);
+          // if there is no such user in database, error message is passed to callback function
+          if (!user) {
+              console.log('incorrect username');
+              return callback({message: 'Incorrect username or password.'}, false);
+          }
+
+          if (!user.validatePassword(password)) {
+              console.log('incorrect password');
+              return callback({message: 'Incorrect password.'}, false);
+          }
+
+          console.log('finished');
+          return callback(null, user);
+        }).catch(error => {
             if (error) {
                 console.log(error);
                 return callback(error);
             }
-            console.log(user);
-            // if there is no such user in database, error message is passed to callback function
-            if (!user) {
-                console.log('incorrect username');
-                return callback({message: 'Incorrect username or password.'}, false);
-            }
-
-            if (!user.validatePassword(password)) {
-                console.log('incorrect password');
-                return callback({message: 'Incorrect password.'}, false);
-            }
-
-            console.log('finished');
-            return callback(null, user);
+            
         });
 }));
 
