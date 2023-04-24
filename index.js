@@ -39,7 +39,7 @@ const Users = models.User;
 const { check, validationResult } = require('express-validator');
 
 // allows mongoose to connect to database for CRUD operations on docs within REST API
-mongoose.connect("mongodb://127.0.0.1/myFlixDB", {
+mongoose.connect("mongodb://127.0.0.1/cfDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
