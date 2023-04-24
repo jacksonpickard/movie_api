@@ -54,6 +54,7 @@ mongoose.connect( process.env.CONNECTION_URI, {
 app.use(express.static("public"));
 
 
+
 // ENDPOINTS
 
 app.get("/", (req, res) => {
