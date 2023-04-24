@@ -45,7 +45,7 @@ const { check, validationResult } = require('express-validator');
 // });
 
 // connects database on Atlas to Heroku API
-mongoose.connect( "process.env.CONNECTION_URI", {
+mongoose.connect( process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
