@@ -155,7 +155,8 @@ passport.authenticate("jwt", {session: false}),
 });
 
 //POST for user registration
-app.post("/register", 
+app.post(
+  "/register", 
     [
         check('Username', 'Username must have a minimum of 5 characters').isLength({min: 5}),
         check('Username', 'Username contains non alphanumeric characters - not allowed').isAlphanumeric(),
